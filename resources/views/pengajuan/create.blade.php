@@ -15,49 +15,62 @@
         .preview-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen flex flex-col">
+<body class="bg-slate-100 min-h-screen flex flex-col overflow-x-hidden">
 
-    <nav class="bg-[#1e4b8f] text-white px-8 py-4 flex justify-between items-center shadow-md">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-xl shadow-inner">
-                <i class="fa-solid fa-graduation-cap text-yellow-400"></i>
-            </div>
-            <div>
-                <h1 class="font-extrabold text-lg tracking-tight leading-none uppercase">SIPA - PORTAL MAHASISWA</h1>
-                <p class="text-[10px] text-blue-200 font-bold uppercase tracking-widest mt-1">Fakultas Teknik & Ilmu Komputer</p>
-            </div>
-        </div>
+    @php
+        // Logika Deteksi Prodi Otomatis dari NPM (DINAMIS & RESPONSIF)
+        $npmMhs = auth()->user()->npm ?? '';
+        $kodeProdi = substr($npmMhs, 0, 2);
+        $namaProdi = match($kodeProdi) {
+            '66' => 'Teknik Informatika',
+            '65' => 'Teknik Sipil',
+            '64' => 'Teknik Mesin',
+            '63' => 'Teknik Industri',
+            default => 'Prodi Tidak Diketahui'
+        };
+    @endphp
+
+    <nav class="bg-[#1e4b8f] text-white px-4 sm:px-8 py-3 sm:py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-md gap-4">
         
-        @php
-            // Logika Deteksi Prodi Otomatis dari NPM
-            $npmMhs = auth()->user()->npm ?? '';
-            $kodeProdi = substr($npmMhs, 0, 2);
-            $namaProdi = match($kodeProdi) {
-                '66' => 'Teknik Informatika',
-                '65' => 'Teknik Sipil',
-                '64' => 'Teknik Mesin',
-                '63' => 'Teknik Industri',
-                default => 'Prodi Tidak Diketahui'
-            };
-        @endphp
-
-        <div class="flex items-center gap-6">
-            <div class="text-right">
-                <p class="text-sm font-bold tracking-wide">{{ auth()->user()->name }}</p>
-                <p class="text-[10px] text-yellow-300 font-bold uppercase mt-0.5">
-                    NPM: {{ auth()->user()->npm }} <span class="text-blue-200 font-semibold px-1">•</span> {{ $namaProdi }}
-                </p>
+        <div class="flex items-center justify-between w-full sm:w-auto">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <div class="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center text-xl shadow-inner text-[#1e4b8f] shrink-0">
+                    <i class="fa-solid fa-user-graduate"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-sm sm:text-lg tracking-tight leading-none uppercase">Portal Mahasiswa</h1>
+                    <p class="text-[8px] sm:text-[10px] text-blue-200 font-bold uppercase tracking-widest mt-1">Fakultas Teknik & Ilmu Komputer</p>
+                </div>
             </div>
-            <form action="{{ route('logout') }}" method="POST">
+            
+            <form action="{{ route('logout') }}" method="POST" class="block sm:hidden shrink-0 ml-2">
                 @csrf
-                <button type="submit" class="bg-red-500 hover:bg-red-600 active:scale-95 px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-md shadow-red-500/20">
-                    LOGOUT <i class="fa-solid fa-power-off text-[11px]"></i>
+                <button type="submit" class="bg-red-500 hover:bg-red-600 active:scale-95 p-2.5 rounded-xl text-xs font-bold transition-all shadow-md shadow-red-500/20 group">
+                    <i class="fa-solid fa-right-from-bracket text-sm group-hover:translate-x-0.5 transition-transform"></i>
+                </button>
+            </form>
+        </div>
+
+        <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto border-t border-blue-700/50 sm:border-none pt-3 sm:pt-0">
+            <div class="flex flex-col items-start sm:items-end w-full sm:w-auto">
+                <p class="text-xs sm:text-sm font-bold tracking-wide">{{ auth()->user()->name }}</p>
+                <div class="flex flex-wrap items-center gap-2 mt-1">
+                    <span class="text-[9px] sm:text-[10px] text-blue-200 font-medium">NPM: {{ auth()->user()->npm }}</span>
+                    <span class="bg-yellow-400 text-blue-900 text-[8px] sm:text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">{{ $namaProdi }}</span>
+                </div>
+            </div>
+
+            <form action="{{ route('logout') }}" method="POST" class="hidden sm:block ml-6">
+                @csrf
+                <button type="submit" class="bg-red-500 hover:bg-red-600 active:scale-95 px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-md shadow-red-500/20 group">
+                    <span>KELUAR</span>
+                    <i class="fa-solid fa-right-from-bracket text-[11px] group-hover:translate-x-0.5 transition-transform"></i>
                 </button>
             </form>
         </div>
     </nav>
 
-    <main class="flex-grow p-8 max-w-2xl w-full mx-auto flex flex-col justify-center">
+    <main class="flex-grow p-4 sm:p-8 max-w-2xl w-full mx-auto flex flex-col justify-center">
         
         @if(session('success'))
         <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-2xl mb-6 flex items-start gap-3 shadow-sm">
@@ -75,10 +88,10 @@
             <div class="text-xs">
                 <p class="font-bold text-rose-900">Aturan Validasi Sistem Menolak Berkas:</p>
                 <ul class="list-disc pl-5 space-y-1 mt-1 font-medium">
-             @foreach(array_unique($errors->all()) as $error)
-                 <li>{{ $error }}</li>
-                 @endforeach
-                    </ul>
+                    @foreach(array_unique($errors->all()) as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
         </div>
         @endif
@@ -89,28 +102,28 @@
             </a>
         </div>
 
-        <div class="bg-white rounded-3xl shadow-md border border-slate-200/60 overflow-hidden">
+        <div class="bg-white rounded-3xl shadow-md border border-slate-200/60 overflow-hidden mb-10">
             
             <div class="relative w-full bg-[#1e4b8f] flex flex-col justify-center overflow-hidden">
                 <img src="/asset/img/falkutas_ftik.png" alt="Banner FTIK" class="w-full h-auto object-contain z-0">
             </div>
 
-            <div class="px-8 pt-6 pb-2 border-b border-slate-100 bg-slate-50/50">
-                <h1 class="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
+            <div class="px-6 sm:px-8 pt-6 pb-2 border-b border-slate-100 bg-slate-50/50">
+                <h1 class="text-base sm:text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
                     <i class="fa-solid fa-file-signature text-[#1e4b8f]"></i> Formulir Permohonan Dokumen Administrasi
                 </h1>
-                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">SIPA Fakultas Teknik & Ilmu Komputer - Universitas Pancasakti Tegal</p>
+                <p class="text-[9px] sm:text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">SIPA Fakultas Teknik & Ilmu Komputer - Universitas Pancasakti Tegal</p>
             </div>
 
             <form id="formPengajuan" action="{{ route('pengajuan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
-                <div class="p-8 space-y-6">
+                <div class="p-5 sm:p-8 space-y-5 sm:space-y-6">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Alamat Email Aktif Mahasiswa</label>
                         <div class="relative">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400"><i class="fa-solid fa-envelope text-xs"></i></span>
-                            <input type="email" name="email_aktif" value="{{ old('email_aktif') }}" placeholder="Contoh: nama@gmail.com" class="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white pl-11 pr-4 py-3 rounded-xl text-xs transition-all outline-none font-medium" >
+                            <input type="email" name="email_aktif" value="{{ old('email_aktif') }}" placeholder="Contoh: nama@gmail.com" class="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white pl-11 pr-4 py-3 rounded-xl text-xs transition-all outline-none font-medium" required>
                         </div>
                         <p class="text-[10px] text-slate-400 mt-1.5">*Surat yang selesai divalidasi Admin TU akan otomatis dikirimkan ke email ini.</p>
                     </div>
@@ -119,7 +132,7 @@
                         <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Pilih Jenis Layanan Surat</label>
                         <div class="relative">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400"><i class="fa-solid fa-folder-tree text-xs"></i></span>
-                            <select name="jenis_surat" id="jenis_surat" onchange="kendaliFormBunglon()" class="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white pl-11 pr-4 py-3 rounded-xl text-xs transition-all outline-none font-semibold text-slate-700 appearance-none cursor-pointer" >
+                            <select name="jenis_surat" id="jenis_surat" onchange="kendaliFormBunglon()" class="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white pl-11 pr-4 py-3 rounded-xl text-xs transition-all outline-none font-semibold text-slate-700 appearance-none cursor-pointer" required>
                                 <option value="">-- Silakan Pilih Surat --</option>
                                 <option value="Aktif Kuliah">Surat Pernyataan Aktif Kuliah</option>
                                 <option value="Cuti">Surat Permohonan Cuti Kuliah</option>
@@ -130,7 +143,7 @@
                         </div>
                     </div>
 
-                    <div id="blok_aktif_kuliah" class="hidden bg-blue-50/40 border border-blue-100 rounded-2xl p-6 space-y-4">
+                    <div id="blok_aktif_kuliah" class="hidden bg-blue-50/40 border border-blue-100 rounded-2xl p-4 sm:p-6 space-y-4">
                         <div>
                             <label class="block text-[11px] font-bold text-blue-800 mb-1.5">Keperluan Pengambilan Dokumen:</label>
                             <select name="keperluan" id="keperluan" onchange="kendaliFormBunglon()" class="w-full bg-white border border-blue-200 focus:border-blue-500 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-700 outline-none">
@@ -166,7 +179,7 @@
                         </div>
                     </div>
 
-                    <div id="blok_cuti" class="hidden bg-amber-50/40 border border-amber-100 rounded-2xl p-5 space-y-4">
+                    <div id="blok_cuti" class="hidden bg-amber-50/40 border border-amber-100 rounded-2xl p-4 sm:p-5 space-y-4">
                         <p class="text-xs font-bold text-amber-800"><i class="fa-solid fa-calendar-day mr-1"></i> Rincian Target Periode Cuti Kuliah:</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div>
@@ -183,7 +196,6 @@
                             <label class="block text-[10px] text-slate-700 font-bold mb-1.5">
                                 UPLOAD SURAT KETERANGAN ALASAN CUTI DARI ORANG TUA / PERUSAHAAN (WAJIB PDF, MAX 2MB) <span class="text-red-500 text-sm">*</span>
                             </label>
-                            
                             <input type="file" name="surat_keterangan_cuti" class="w-full bg-white border border-slate-200 p-2 rounded-xl text-xs font-medium focus:border-amber-500" >
                             
                             <div class="mt-3 p-4 bg-white border border-amber-200 rounded-xl shadow-sm relative overflow-hidden">
@@ -191,7 +203,7 @@
                                 <p class="text-[10px] font-bold text-amber-600 mb-2 flex items-center gap-1.5 ml-1">
                                     <i class="fa-solid fa-file-lines"></i> CONTOH FORMAT SURAT KETERANGAN:
                                 </p>
-                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 text-[10px] text-slate-600 font-mono leading-relaxed">
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 text-[10px] text-slate-600 font-mono leading-relaxed max-w-full overflow-x-auto">
                                     <strong>Hal:</strong> Surat Keterangan Persetujuan Cuti Kuliah<br><br>
                                     Saya yang bertanda tangan di bawah ini, selaku Orang Tua / Pimpinan Perusahaan dari mahasiswa:<br>
                                     Nama : (Nama Mahasiswa)<br>
@@ -205,7 +217,7 @@
                         </div>
                     </div>
 
-                    <div id="blok_pkl" class="hidden bg-teal-50/40 border border-teal-100 rounded-2xl p-5 space-y-4">
+                    <div id="blok_pkl" class="hidden bg-teal-50/40 border border-teal-100 rounded-2xl p-4 sm:p-5 space-y-4">
                         <div>
                             <label class="block text-xs font-bold text-teal-800 mb-1">Nama Perusahaan / Tempat Magang KKL/PKL:</label>
                             <input type="text" name="perusahaan" placeholder="Contoh: PT. PLN (Persero) Area Tegal" class="w-full bg-white border border-teal-200 focus:border-teal-500 px-3 py-2.5 rounded-xl text-xs outline-none font-medium">
@@ -215,7 +227,6 @@
                             <p class="text-[10px] font-bold text-teal-800 uppercase tracking-wider mb-2 flex items-center gap-1">
                                 <i class="fa-solid fa-list-check"></i> Lengkapi Persyaratan Dokumen
                             </p>
-                            
                             <div>
                                 <label class="block text-[10px] text-slate-500 font-bold mb-1">1. SCAN KRS TERKINI (WAJIB PDF, MAX 2MB) <span class="text-red-500 text-sm">*</span></label>
                                 <input type="file" name="file_krs" class="w-full bg-white border border-slate-200 p-2 rounded-xl text-xs font-medium focus:border-teal-500" >
@@ -235,7 +246,7 @@
                         </div>
                     </div>
 
-                    <div id="blok_ruangan" class="hidden bg-purple-50/40 border border-purple-100 rounded-2xl p-5 space-y-4">
+                    <div id="blok_ruangan" class="hidden bg-purple-50/40 border border-purple-100 rounded-2xl p-4 sm:p-5 space-y-4">
                         <div>
                             <label class="block text-xs font-bold text-purple-800 mb-1">Nama Ruangan / Gedung yang Ingin Dipinjam:</label>
                             <input type="text" name="nama_ruangan" placeholder="Contoh: Aula Gedung Lantai 3 FTIK" class="w-full bg-white border border-purple-200 focus:border-purple-500 px-3 py-2.5 rounded-xl text-xs outline-none font-medium">
@@ -253,29 +264,31 @@
                                     <i class="fa-solid fa-file-pdf"></i> PATOKAN SUSUNAN PROPOSAL:
                                 </p>
                                 
-                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 text-[10px] text-slate-700 font-mono leading-relaxed h-56 overflow-y-auto preview-scroll shadow-inner">
+                                <div class="bg-slate-50 p-3 sm:p-4 rounded-lg border border-slate-200 text-[10px] text-slate-700 font-mono leading-relaxed h-56 overflow-y-auto preview-scroll shadow-inner">
                                     <div class="text-center font-bold mb-3 underline text-[11px]">PROPOSAL PEMINJAMAN RUANGAN</div>
                                     
                                     <strong class="text-purple-800">A. LATAR BELAKANG</strong><br>
                                     Dalam rangka meningkatkan soft skill... kami dari [Nama Organisasi] bermaksud mengadakan kegiatan [Nama Kegiatan]. Untuk menunjang kelancaran kegiatan tersebut, kami membutuhkan fasilitas ruangan kampus.<br><br>
                                     
                                     <strong class="text-purple-800">B. DETAIL KEGIATAN & PEMINJAMAN</strong><br>
-                                    <table class="w-full mt-1 mb-2">
-                                        <tr><td width="35%">Nama Kegiatan</td><td width="5%">:</td><td>[Nama Kegiatan]</td></tr>
-                                        <tr><td>Hari / Tanggal</td><td>:</td><td>[Hari, Tanggal Bulan]</td></tr>
-                                        <tr><td>Waktu</td><td>:</td><td>[08.00 WIB] s/d Selesai</td></tr>
-                                        <tr><td>Ruangan</td><td>:</td><td>[Nama Ruangan]</td></tr>
-                                    </table>
+                                    <div class="overflow-x-auto w-full">
+                                        <table class="w-full mt-1 mb-2 min-w-[200px]">
+                                            <tr><td width="35%">Nama Kegiatan</td><td width="5%">:</td><td>[Nama Kegiatan]</td></tr>
+                                            <tr><td>Hari / Tanggal</td><td>:</td><td>[Hari, Tanggal]</td></tr>
+                                            <tr><td>Waktu</td><td>:</td><td>[08.00 WIB] s/d Selesai</td></tr>
+                                            <tr><td>Ruangan</td><td>:</td><td>[Nama Ruangan]</td></tr>
+                                        </table>
+                                    </div>
                                     
                                     <strong class="text-purple-800">C. PENUTUP</strong><br>
                                     Demikian proposal permohonan peminjaman ruangan ini kami sampaikan. Kami berharap Bapak/Ibu pimpinan dapat memberikan izin...<br><br>
                                     
-                                    <div class="flex justify-between text-center mt-5 mb-4 border-t border-slate-200 pt-4">
-                                        <div class="w-1/2">
+                                    <div class="flex flex-col sm:flex-row justify-between text-center mt-5 mb-4 border-t border-slate-200 pt-4 gap-4">
+                                        <div class="w-full sm:w-1/2">
                                             Hormat Kami,<br>Pemohon / Peminjam<br><br><br><br>
                                             <b>( [Nama Peminjam] )</b><br>NPM. [NPM]
                                         </div>
-                                        <div class="w-1/2">
+                                        <div class="w-full sm:w-1/2">
                                             Mengetahui,<br>Ketua Program Studi<br><br><br><br>
                                             <b>( [Nama Kaprodi] )</b><br>NIDN. [NIDN]
                                         </div>
@@ -300,8 +313,8 @@
         </div>
     </main>
 
-    <footer class="text-center text-[11px] text-slate-400 font-medium py-6">
-        &copy; 2026 SIPA Fakultas Teknik - Universitas Pancasakti Tegal.
+    <footer class="text-center text-[11px] text-slate-400 font-medium py-6 mt-auto">
+        &copy; 2026 SIPA Fakultas Teknik - Universitas Pancasakti Tegal. All Rights Reserved.
     </footer>
 
     <script>
@@ -337,14 +350,11 @@
             }
         }
 
-        // 🌟 SCRIPT ANTI SPAM KLIK DITAMBAHKAN DI SINI 🌟
+        // SCRIPT ANTI SPAM KLIK DITAMBAHKAN DI SINI
         document.getElementById('formPengajuan').addEventListener('submit', function(e) {
             let btn = document.getElementById('btnSubmitForm');
-            // Matikan tombol seketika setelah klik pertama
             btn.disabled = true;
-            // Ubah tampilan tombol jadi agak redup
             btn.classList.add('opacity-70', 'cursor-not-allowed');
-            // Ganti teks tombolnya
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-[10px]"></i> SEDANG MEMPROSES...';
         });
     </script>

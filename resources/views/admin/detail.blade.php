@@ -97,7 +97,6 @@
                     $namaKaprodi = 'Dr. M. Fajar Nurwildani, MT';
                     $nipyKaprodi = '19856101978';
                 } else {
-                    // Default / 66
                     $namaProdi = 'Informatika';
                     $namaKaprodi = 'Ali Sofyan, S.T., M.Kom';
                     $nipyKaprodi = '3126511985';
@@ -119,186 +118,200 @@
 
                   <div class="overflow-x-auto">
                         <textarea name="isi_surat" id="editor">
+                            @if(!empty($pengajuan->isi_surat))
+                                {!! $pengajuan->isi_surat !!}
+                            @else
                                 @if($pengajuan->jenis_surat == 'Aktif Kuliah')
-                                    <div style="text-align: center; font-weight: bold; text-decoration: underline; font-size: 14pt;">SURAT KETERANGAN</div>
-                                    <div style="text-align: center; margin-bottom: 20px;">Nomor : .../K/I/FTIK/UPS/{{ date('m/Y') }}</div>
+                                    <p style="text-align: center;"><strong><u>SURAT KETERANGAN</u></strong></p>
+                                    <p style="text-align: center;">Nomor : .../K/I/FTIK/UPS/{{ date('m/Y') }}</p>
                                     
                                     <p>Dekan Fakultas Teknik dan Ilmu Komputer Universitas Pancasakti Tegal menerangkan dengan sebenarnya bahwa :</p>
-                                    <table style="width: 100%; padding-left: 20px; margin-bottom: 15px;">
-                                        <tr><td style="width: 30%;">Nama</td><td style="width: 2%;">:</td><td><strong>{{ $pengajuan->user->name }}</strong></td></tr>
-                                        <tr><td>NPM</td><td>:</td><td>{{ $pengajuan->user->npm }}</td></tr>
-                                        <tr><td>Tempat, Tgl lahir</td><td>:</td><td>{{ $biodataLengkap ?? '[Isi Tempat, Tgl Lahir]' }}</td></tr>
-                                        <tr><td>Progdi / Jenjang</td><td>:</td><td>{{ $namaProdi }} / S1</td></tr>
-                                    </table>
+                                    <figure class="table">
+                                        <table style="width: 100%;">
+                                            <tbody>
+                                                <tr><td style="width: 25%;">Nama</td><td style="width: 2%;">:</td><td><strong>{{ $pengajuan->user->name }}</strong></td></tr>
+                                                <tr><td>NPM</td><td>:</td><td>{{ $pengajuan->user->npm }}</td></tr>
+                                                <tr><td>Tempat, Tgl lahir</td><td>:</td><td>{{ $biodataLengkap ?? '[Isi Tempat, Tgl Lahir]' }}</td></tr>
+                                                <tr><td>Progdi / Jenjang</td><td>:</td><td>{{ $namaProdi }} / S1</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </figure>
                                     
                                     <p>Adalah benar-benar Mahasiswa Fakultas Teknik dan Ilmu Komputer Universitas Pancasakti Tegal, sampai sekarang masih aktif kuliah dan terdaftar pada Semester [Gasal/Genap] Tahun Akademik [Tahun].</p>
                                     <p>Surat Keterangan ini digunakan untuk <strong>{{ $pengajuan->keperluan }}</strong>.</p>
                                     <p>Demikian Surat keterangan ini dibuat untuk digunakan sebagaimana mestinya.</p>
                                     
-                                    @elseif($pengajuan->jenis_surat == 'Cuti')
-                                <table style="width: 100%; margin-bottom: 20px;">
-                                    <tr><td style="width: 15%;">Nomor</td><td style="width: 2%;">:</td><td style="width: 45%;">.../K/I/FTIK/UPS/{{ date('m/Y') }}</td><td style="width: 38%; text-align: right;">Tegal, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</td></tr>
-                                    <tr><td>Lampiran</td><td>:</td><td colspan="2">-</td></tr>
-                                    <tr><td>Perihal</td><td>:</td><td colspan="2"><strong>Permohonan Cuti Kuliah</strong></td></tr>
-                                </table>
+                                @elseif($pengajuan->jenis_surat == 'Cuti')
+                                    <figure class="table">
+                                        <table style="width: 100%;">
+                                            <tbody>
+                                                <tr><td style="width: 15%;">Nomor</td><td style="width: 2%;">:</td><td style="width: 45%;">.../K/I/FTIK/UPS/{{ date('m/Y') }}</td><td style="width: 38%; text-align: right;">Tegal, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</td></tr>
+                                                <tr><td>Lampiran</td><td>:</td><td colspan="2">-</td></tr>
+                                                <tr><td>Perihal</td><td>:</td><td colspan="2"><strong>Permohonan Cuti Kuliah</strong></td></tr>
+                                            </tbody>
+                                        </table>
+                                    </figure>
 
-                                <p>Kepada Yth : Ka. Biro Akademik dan Kemahasiswaan<br>Jl. Halmahera Km. 1, Mintaragen, Kec. Tegal Timur<br>Di Kota Tegal</p>
-                                <p>Disampaikan dengan hormat, Saya yang bertanda tangan dibawah ini :</p>
-                                <table style="width: 100%; padding-left: 20px; margin-bottom: 15px;">
-                                    <tr><td style="width: 30%;">Nama</td><td style="width: 2%;">:</td><td><strong>{{ $pengajuan->user->name }}</strong></td></tr>
-                                    <tr><td>NPM</td><td>:</td><td>{{ $pengajuan->user->npm }}</td></tr>
-                                    <tr><td>Progdi / Jenjang</td><td>:</td><td>{{ $namaProdi }} / S1</td></tr>
-                                </table>
-                                <p>Dengan ini mengajukan permohonan cuti kuliah pada semester :</p>
-                                <table border="1" style="width: 80%; margin: 0 auto; border-collapse: collapse; text-align: center; margin-bottom: 15px;" cellpadding="5">
-                                    <tr><th style="width: 10%;">No.</th><th>Semester</th><th>Tahun Akademik</th></tr>
-                                    <tr><td>1.</td><td>{{ $pengajuan->semester_cuti }}</td><td>{{ $pengajuan->tahun_akademik }}</td></tr>
-                                </table>
-                                <p>Demikian Surat keterangan ini dibuat untuk digunakan sebagaimana mestinya.</p>
-                                
-                                <br>
-                                <p>[KANAN_START]</p>
-                                An. Dekan,<br>
-                                Ka. Prodi {{ $namaProdi }}<br>
-                                [TTD]<br>
-                                <strong>{{ $namaKaprodi }}</strong><br>
-                                NIPY. {{ $nipyKaprodi }}
-                                <p>[KANAN_END]</p>
+                                    <p>Kepada Yth : Ka. Biro Akademik dan Kemahasiswaan<br>Jl. Halmahera Km. 1, Mintaragen, Kec. Tegal Timur<br>Di Kota Tegal</p>
+                                    <p>Disampaikan dengan hormat, Saya yang bertanda tangan dibawah ini :</p>
+                                    <figure class="table">
+                                        <table style="width: 100%;">
+                                            <tbody>
+                                                <tr><td style="width: 30%;">Nama</td><td style="width: 2%;">:</td><td><strong>{{ $pengajuan->user->name }}</strong></td></tr>
+                                                <tr><td>NPM</td><td>:</td><td>{{ $pengajuan->user->npm }}</td></tr>
+                                                <tr><td>Progdi / Jenjang</td><td>:</td><td>{{ $namaProdi }} / S1</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </figure>
+                                    <p>Dengan ini mengajukan permohonan cuti kuliah pada semester :</p>
+                                    <figure class="table">
+                                        <table border="1" style="width: 80%; border-collapse: collapse; text-align: center;" cellpadding="5">
+                                            <tbody>
+                                                <tr><th style="width: 10%;">No.</th><th>Semester</th><th>Tahun Akademik</th></tr>
+                                                <tr><td>1.</td><td>{{ $pengajuan->semester_cuti }}</td><td>{{ $pengajuan->tahun_akademik }}</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </figure>
+                                    <p>Demikian Surat keterangan ini dibuat untuk digunakan sebagaimana mestinya.</p>
+                                    
+                                    <p>&nbsp;</p>
+                                    <p style="text-align: right;">An. Dekan,<br>Ka. Prodi {{ $namaProdi }}<br>[TTD]<br><strong>{{ $namaKaprodi }}</strong><br>NIPY. {{ $nipyKaprodi }}</p>
 
-                            @elseif($pengajuan->jenis_surat == 'PKL' or $pengajuan->jenis_surat == 'KKL')
-                                <div style="text-align: left; font-weight: bold; font-size: 12pt;">FORM-1<br>LEMBAR REKOMENDASI</div>
-                                
-                                <p>Yang bertanda tangan di bawah ini Ketua Program Studi {{ $namaProdi }} :</p>
-                                <table style="width: 100%; padding-left: 20px; margin-bottom: 15px;">
-                                    <tr><td style="width: 30%;">Nama</td><td style="width: 2%;">:</td><td><strong>{{ $namaKaprodi }}</strong></td></tr>
-                                    <tr><td>NIPY</td><td>:</td><td>{{ $nipyKaprodi }}</td></tr>
-                                    <tr><td>Jabatan</td><td>:</td><td>Ka. Prodi {{ $namaProdi }}</td></tr>
-                                </table>
-                                
-                                <p>Memberikan rekomendasi untuk dapat melaksanakan PKL / KKL kepada mahasiswa:</p>
-                                <table style="width: 100%; padding-left: 20px; margin-bottom: 15px;">
-                                    <tr><td style="width: 30%;">Nama</td><td style="width: 2%;">:</td><td><strong>{{ $pengajuan->user->name }}</strong></td></tr>
-                                    <tr><td>NPM</td><td>:</td><td>{{ $pengajuan->user->npm }}</td></tr>
-                                    <tr><td>Semester</td><td>:</td><td>[Isi Semester Berjalan]</td></tr>
-                                </table>
-                                
-                                <p>sesuai dengan persyaratan administrasi yang telah dilengkapinya yaitu:</p>
-                                <table border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 15px;" cellpadding="5">
-                                    <tr><th style="width: 10%;">No</th><th>Persyaratan Administrasi</th><th style="width: 20%;">Keterangan (√)</th></tr>
-                                    <tr><td align="center">1</td><td>Telah menempuh semester IV</td><td align="center">√</td></tr>
-                                    <tr><td align="center">2</td><td>Telah memempuh minimal 79 sks</td><td align="center">√</td></tr>
-                                    <tr><td align="center">3</td><td>Telah mencantumkan mata kuliah PKL pada KRS pada semester berjalan</td><td align="center">√</td></tr>
-                                    <tr><td align="center">4</td><td>Telah mengikuti KKL (ditandai kepemilikan sertifikat KKL)</td><td align="center">√</td></tr>
-                                    <tr><td align="center">5</td><td>Telah heregristasi pada semester berlangsung</td><td align="center">√</td></tr>
-                                </table>
-                                <p>Demikian rekomendasi ini untuk dapat dipergunakan sebagaimana mestinya.</p>
-                                
-                                <br>
-                                <p>[KANAN_START]</p>
-                                Tegal, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('F Y') }}<br>
-                                Kaprodi {{ $namaProdi }}<br>
-                                [TTD]<br>
-                                <strong>{{ $namaKaprodi }}</strong><br>
-                                NIPY. {{ $nipyKaprodi }}
-                                <p>[KANAN_END]</p>
+                                @elseif($pengajuan->jenis_surat == 'PKL' or $pengajuan->jenis_surat == 'KKL')
+                                    <p><strong>FORM-1<br>LEMBAR REKOMENDASI</strong></p>
+                                    
+                                    <p>Yang bertanda tangan di bawah ini Ketua Program Studi {{ $namaProdi }} :</p>
+                                    <figure class="table">
+                                        <table style="width: 100%;">
+                                            <tbody>
+                                                <tr><td style="width: 30%;">Nama</td><td style="width: 2%;">:</td><td><strong>{{ $namaKaprodi }}</strong></td></tr>
+                                                <tr><td>NIPY</td><td>:</td><td>{{ $nipyKaprodi }}</td></tr>
+                                                <tr><td>Jabatan</td><td>:</td><td>Ka. Prodi {{ $namaProdi }}</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </figure>
+                                    
+                                    <p>Memberikan rekomendasi untuk dapat melaksanakan PKL / KKL kepada mahasiswa:</p>
+                                    <figure class="table">
+                                        <table style="width: 100%;">
+                                            <tbody>
+                                                <tr><td style="width: 30%;">Nama</td><td style="width: 2%;">:</td><td><strong>{{ $pengajuan->user->name }}</strong></td></tr>
+                                                <tr><td>NPM</td><td>:</td><td>{{ $pengajuan->user->npm }}</td></tr>
+                                                <tr><td>Semester</td><td>:</td><td>[Isi Semester Berjalan]</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </figure>
+                                    
+                                    <p>Sesuai dengan persyaratan administrasi yang telah dilengkapinya yaitu:</p>
+                                    <figure class="table">
+                                        <table border="1" style="width: 100%; border-collapse: collapse;" cellpadding="5">
+                                            <tbody>
+                                                <tr><th style="width: 10%;">No</th><th>Persyaratan Administrasi</th><th style="width: 20%;">Keterangan (&radic;)</th></tr>
+                                                <tr><td style="text-align: center;">1</td><td>Telah menempuh semester IV</td><td style="text-align: center;">&radic;</td></tr>
+                                                <tr><td style="text-align: center;">2</td><td>Telah memempuh minimal 79 sks</td><td style="text-align: center;">&radic;</td></tr>
+                                                <tr><td style="text-align: center;">3</td><td>Telah mencantumkan mata kuliah PKL pada KRS pada semester berjalan</td><td style="text-align: center;">&radic;</td></tr>
+                                                <tr><td style="text-align: center;">4</td><td>Telah mengikuti KKL (ditandai kepemilikan sertifikat KKL)</td><td style="text-align: center;">&radic;</td></tr>
+                                                <tr><td style="text-align: center;">5</td><td>Telah heregristasi pada semester berlangsung</td><td style="text-align: center;">&radic;</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </figure>
+                                    <p>Demikian rekomendasi ini untuk dapat dipergunakan sebagaimana mestinya.</p>
+                                    
+                                    <p>&nbsp;</p>
+                                    <p style="text-align: right;">Tegal, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('F Y') }}<br>Kaprodi {{ $namaProdi }}<br>[TTD]<br><strong>{{ $namaKaprodi }}</strong><br>NIPY. {{ $nipyKaprodi }}</p>
 
-                            @elseif($pengajuan->jenis_surat == 'Peminjaman Ruangan')
-                                <div style="text-align: center; font-weight: bold; text-decoration: underline; font-size: 14pt;">SURAT PERSETUJUAN PEMINJAMAN RUANGAN</div>
-                                <div style="text-align: center; margin-bottom: 20px;">Nomor : .../K/I/FTIK/UPS/{{ date('m/Y') }}</div>
-                                
-                                <p>Menindaklanjuti permohonan peminjaman ruangan/fasilitas, Dekan Fakultas Teknik dan Ilmu Komputer Universitas Pancasakti Tegal dengan ini memberikan persetujuan kepada:</p>
-                                <table style="width: 100%; padding-left: 20px; margin-bottom: 15px;">
-                                    <tr><td style="width: 30%;">Nama Penanggung Jawab</td><td style="width: 2%;">:</td><td><strong>{{ $pengajuan->user->name }}</strong></td></tr>
-                                    <tr><td>NPM</td><td>:</td><td>{{ $pengajuan->user->npm }}</td></tr>
-                                    <tr><td>Ruangan / Fasilitas</td><td>:</td><td><strong>{{ $pengajuan->perusahaan ?? '[Nama Ruangan]' }}</strong></td></tr>
-                                    <tr><td>Hari, Tanggal Kegiatan</td><td>:</td><td>[Isi Hari dan Tanggal]</td></tr>
-                                    <tr><td>Waktu</td><td>:</td><td>[Isi Jam Pelaksanaan]</td></tr>
-                                    <tr><td>Keperluan / Acara</td><td>:</td><td>[Isi Nama Acara/Kegiatan]</td></tr>
-                                </table>
-                                <p>Untuk menggunakan fasilitas / ruangan tersebut sesuai dengan proposal permohonan yang diajukan. Diharapkan untuk menjaga kebersihan dan ketertiban fasilitas kampus selama kegiatan berlangsung.</p>
-                                <p>Demikian surat persetujuan ini dibuat untuk dipergunakan sebagaimana mestinya.</p>
-                                
-                                <br>
-                                <p>[KANAN_START]</p>
-                                Tegal, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}<br>
-                                Dekan Fakultas Teknik dan Ilmu Komputer<br>
-                                [TTD]<br>
-                                <strong>Dr. Agus Wibowo, S.T., M.T.</strong><br>
-                                NIPY. 126518101972
-                                <p>[KANAN_END]</p>
+                                @elseif($pengajuan->jenis_surat == 'Peminjaman Ruangan')
+                                    <p style="text-align: center;"><strong><u>SURAT PERSETUJUAN PEMINJAMAN RUANGAN</u></strong></p>
+                                    <p style="text-align: center;">Nomor : .../K/I/FTIK/UPS/{{ date('m/Y') }}</p>
+                                    
+                                    <p>Menindaklanjuti permohonan peminjaman ruangan/fasilitas, Dekan Fakultas Teknik dan Ilmu Komputer Universitas Pancasakti Tegal dengan ini memberikan persetujuan kepada:</p>
+                                    <figure class="table">
+                                        <table style="width: 100%;">
+                                            <tbody>
+                                                <tr><td style="width: 30%;">Nama Penanggung Jawab</td><td style="width: 2%;">:</td><td><strong>{{ $pengajuan->user->name }}</strong></td></tr>
+                                                <tr><td>NPM</td><td>:</td><td>{{ $pengajuan->user->npm }}</td></tr>
+                                                <tr><td>Ruangan / Fasilitas</td><td>:</td><td><strong>{{ $pengajuan->perusahaan ?? '[Nama Ruangan]' }}</strong></td></tr>
+                                                <tr><td>Hari, Tanggal Kegiatan</td><td>:</td><td>[Isi Hari dan Tanggal]</td></tr>
+                                                <tr><td>Waktu</td><td>:</td><td>[Isi Jam Pelaksanaan]</td></tr>
+                                                <tr><td>Keperluan / Acara</td><td>:</td><td>[Isi Nama Acara/Kegiatan]</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </figure>
+                                    <p>Untuk menggunakan fasilitas / ruangan tersebut sesuai dengan proposal permohonan yang diajukan. Diharapkan untuk menjaga kebersihan dan ketertiban fasilitas kampus selama kegiatan berlangsung.</p>
+                                    <p>Demikian surat persetujuan ini dibuat untuk dipergunakan sebagaimana mestinya.</p>
+                                    
+                                    <p>&nbsp;</p>
+                                    <p style="text-align: right;">Tegal, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}<br>Dekan Fakultas Teknik dan Ilmu Komputer<br>[TTD]<br><strong>Dr. Agus Wibowo, S.T., M.T.</strong><br>NIPY. 126518101972</p>
 
-                            @else
-                                <p>Teks balasan default untuk jenis surat ini belum diatur. Silakan ketik secara manual. Gunakan <b>[TTD]</b> untuk menempelkan QR Code.</p>
+                                @else
+                                    <p>Teks balasan default untuk jenis surat ini belum diatur. Silakan ketik secara manual. Gunakan <strong>[TTD]</strong> untuk menempelkan QR Code.</p>
+                                @endif
                             @endif
                         </textarea>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <input type="hidden" name="alasan_tolak" id="alasan_tolak" value="">
-    
-    <button type="button" id="btnTolak" onclick="prosesTolak()" class="bg-rose-50 hover:bg-rose-500 text-rose-600 hover:text-white border border-rose-200 font-bold py-3.5 rounded-2xl text-xs transition-all flex items-center justify-center gap-2 order-2 sm:order-1">
-        <i class="fa-solid fa-xmark"></i> TOLAK BERKAS
-    </button>
-    
-    <button type="submit" name="status" value="Selesai" id="btnSelesai" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl text-xs transition-all shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 order-1 sm:order-2">
-        <i class="fa-solid fa-check-double"></i> SIMPAN & KIRIM SURAT
-    </button>
-</div>
+                    <input type="hidden" name="alasan_tolak" id="alasan_tolak" value="">
+                    
+                    <button type="button" id="btnTolak" onclick="prosesTolak()" class="bg-rose-50 hover:bg-rose-500 text-rose-600 hover:text-white border border-rose-200 font-bold py-3.5 rounded-2xl text-xs transition-all flex items-center justify-center gap-2 order-2 sm:order-1">
+                        <i class="fa-solid fa-xmark"></i> TOLAK BERKAS
+                    </button>
+                    
+                    <button type="submit" name="status" value="Selesai" id="btnSelesai" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl text-xs transition-all shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 order-1 sm:order-2">
+                        <i class="fa-solid fa-check-double"></i> SIMPAN & KIRIM SURAT
+                    </button>
+                </div>
 
-<script>
-    function prosesTolak() {
-        Swal.fire({
-            title: 'Tolak Berkas?',
-            text: "Ketik alasan penolakan (akan dikirim ke email mahasiswa):",
-            input: 'textarea',
-            inputPlaceholder: 'Contoh: KTP buram, tidak ada tanda tangan...',
-            inputAttributes: {
-                'aria-label': 'Ketik alasan penolakan'
-            },
-            showCancelButton: true,
-            confirmButtonColor: '#e11d48', // Warna Rose-600 Tailwind
-            cancelButtonColor: '#64748b', // Warna Slate-500 Tailwind
-            confirmButtonText: '<i class="fa-solid fa-paper-plane"></i> Tolak & Kirim Email',
-            cancelButtonText: 'Batal',
-            customClass: {
-                confirmButton: 'font-bold rounded-xl shadow-md',
-                cancelButton: 'font-bold rounded-xl'
-            },
-            inputValidator: (value) => {
-                if (!value || value.trim() === '') {
-                    return 'Alasan penolakan WAJIB diisi!'
-                }
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Menampilkan efek loading saat mengirim email
-                Swal.fire({
-                    title: 'Memproses...',
-                    html: 'Sedang mengirim email ke mahasiswa.',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading()
+                <script>
+                    function prosesTolak() {
+                        Swal.fire({
+                            title: 'Tolak Berkas?',
+                            text: "Ketik alasan penolakan (akan dikirim ke email mahasiswa):",
+                            input: 'textarea',
+                            inputPlaceholder: 'Contoh: KTP buram, tidak ada tanda tangan...',
+                            inputAttributes: {
+                                'aria-label': 'Ketik alasan penolakan'
+                            },
+                            showCancelButton: true,
+                            confirmButtonColor: '#e11d48',
+                            cancelButtonColor: '#64748b',
+                            confirmButtonText: '<i class="fa-solid fa-paper-plane"></i> Tolak & Kirim Email',
+                            cancelButtonText: 'Batal',
+                            customClass: {
+                                confirmButton: 'font-bold rounded-xl shadow-md',
+                                cancelButton: 'font-bold rounded-xl'
+                            },
+                            inputValidator: (value) => {
+                                if (!value || value.trim() === '') {
+                                    return 'Alasan penolakan WAJIB diisi!'
+                                }
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                Swal.fire({
+                                    title: 'Memproses...',
+                                    html: 'Sedang mengirim email ke mahasiswa.',
+                                    allowOutsideClick: false,
+                                    didOpen: () => {
+                                        Swal.showLoading()
+                                    }
+                                });
+
+                                document.getElementById('alasan_tolak').value = result.value;
+                                
+                                let inputStatus = document.createElement("input");
+                                inputStatus.setAttribute("type", "hidden");
+                                inputStatus.setAttribute("name", "status");
+                                inputStatus.setAttribute("value", "Ditolak");
+                                document.getElementById('formValidasi').appendChild(inputStatus);
+                                
+                                document.getElementById('formValidasi').submit();
+                            }
+                        });
                     }
-                });
-
-                // Masukkan nilai ke input hidden
-                document.getElementById('alasan_tolak').value = result.value;
-                
-                // Buat input status 'Ditolak'
-                let inputStatus = document.createElement("input");
-                inputStatus.setAttribute("type", "hidden");
-                inputStatus.setAttribute("name", "status");
-                inputStatus.setAttribute("value", "Ditolak");
-                document.getElementById('formValidasi').appendChild(inputStatus);
-                
-                // Submit form
-                document.getElementById('formValidasi').submit();
-            }
-        });
-    }
-</script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                </script>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             </form>
             @else
             <div class="bg-slate-200 text-slate-500 text-center py-4 rounded-2xl text-xs font-bold uppercase tracking-widest border border-slate-300">
@@ -314,7 +327,7 @@
                         <i class="fa-solid fa-magnifying-glass text-blue-600"></i> Pratinjau Proposal / Berkas
                     </h3>
                 </div>
-<div class="flex-grow bg-slate-200 p-3 sm:p-4 overflow-y-auto preview-container space-y-4">
+                <div class="flex-grow bg-slate-200 p-3 sm:p-4 overflow-y-auto preview-container space-y-4">
                     @php
                         $berkas_array = json_decode($pengajuan->file_path, true);
                         if (!is_array($berkas_array)) { $berkas_array = [$pengajuan->file_path]; }
@@ -358,7 +371,6 @@
 
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
     <script>
-        // 🌟 SCRIPT BARU UNTUK KONTROL CKEDITOR 5 (MENGUNCI & MEMBUKA) 🌟
         let myEditor;
 
         if(document.querySelector('#editor')) {
@@ -368,39 +380,33 @@
                 })
                 .then(editor => {
                     myEditor = editor;
-                    // Kunci Editor Saat Halaman Pertama Dibuka
                     editor.enableReadOnlyMode('lock-id');
                 })
                 .catch(error => { console.error(error); });
         }
 
-        // Script Menangani Tombol "Aktifkan Edit"
         document.addEventListener('DOMContentLoaded', function() {
             const btnEdit = document.getElementById('btnEditSurat');
             
             if(btnEdit) {
                 btnEdit.addEventListener('click', function() {
                     if(myEditor) {
-                        // Buka Kunci Editor
                         myEditor.disableReadOnlyMode('lock-id');
                         
-                        // Ubah Style Tombol
                         this.classList.remove('bg-amber-500', 'hover:bg-amber-600', 'text-white');
                         this.classList.add('bg-slate-200', 'text-slate-500', 'cursor-not-allowed');
                         this.innerHTML = '<i class="fa-solid fa-lock-open"></i> MODE EDIT AKTIF';
-                        this.disabled = true; // Matikan tombol agar tak bisa diklik lagi
+                        this.disabled = true;
                     }
                 });
             }
 
-            // Script Mencegah Spam Klik Tombol ACC/TOLAK Admin TU
             const formValidasi = document.getElementById('formValidasi');
             if(formValidasi) {
                 formValidasi.addEventListener('submit', function(e) {
                     const btnSelesai = document.getElementById('btnSelesai');
                     const btnTolak = document.getElementById('btnTolak');
                     
-                    // JALAN NINJA: Beri jeda 50 milidetik agar data 'status' terkirim ke server dulu sebelum tombol dimatikan
                     setTimeout(function() {
                         if(btnSelesai) {
                             btnSelesai.disabled = true;
@@ -419,10 +425,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script>
-        // Konfigurasi letak worker PDF.js
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-        // Variabel untuk melacak PDF mana saja yang sudah dirender agar tidak berat
         let renderedPdfs = {};
 
         function togglePdf(id, url, index) {
@@ -430,20 +434,17 @@
             let icon = document.getElementById(id.replace('pdf-', 'icon-'));
             let text = document.getElementById(id.replace('pdf-', 'text-'));
             
-            // Jika mau dibuka
             if (element.classList.contains('hidden')) {
                 element.classList.remove('hidden');
                 icon.classList.remove('fa-chevron-down');
                 icon.classList.add('fa-chevron-up');
                 text.innerText = "Tutup";
 
-                // Jika PDF belum pernah dirender, maka render sekarang
                 if(!renderedPdfs[index]) {
                     renderPDF(url, 'the-canvas-' + index);
-                    renderedPdfs[index] = true; // Tandai sudah dirender
+                    renderedPdfs[index] = true;
                 }
             } 
-            // Jika ditutup
             else {
                 element.classList.add('hidden');
                 icon.classList.remove('fa-chevron-up');
@@ -453,16 +454,14 @@
         }
 
         function renderPDF(url, canvasId) {
-            // Menggunakan objek konfigurasi untuk menyelipkan header bypass Ngrok
             let loadingTask = pdfjsLib.getDocument({
                 url: url,
                 httpHeaders: {
-                    'ngrok-skip-browser-warning': '69420' // Header sakti agar Ngrok tidak memblokir file
+                    'ngrok-skip-browser-warning': '69420'
                 }
             });
             
             loadingTask.promise.then(function(pdf) {
-                // Ambil halaman pertama saja
                 pdf.getPage(1).then(function(page) {
                     let scale = 1.5; 
                     let viewport = page.getViewport({scale: scale});

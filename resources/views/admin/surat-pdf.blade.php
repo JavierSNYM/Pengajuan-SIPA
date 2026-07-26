@@ -19,26 +19,41 @@
         .container { 
             width: 100%;
         }
-        .garis-ganda { 
-            border-top: 3px solid #000; 
-            border-bottom: 1px solid #000; 
-            height: 1px; 
-            margin-top: 8px; 
-            margin-bottom: 15px; 
+        
+        /* 🌟 GAYA BARU KOP SURAT SESUAI GAMBAR 🌟 */
+        .garis-emas { 
+            border-top: 4px solid #a97b2d; /* Garis emas tebal */
+            margin-top: 5px; 
+            margin-bottom: 20px; 
         }
         .tagline-container { 
             margin-top: 5px; 
             margin-left: 0; 
         }
         .tagline { 
-            background-color: #e5f4c4; 
-            color: #444; 
+            background-color: #d1e56b; /* Hijau kekuningan */
+            color: #fff; /* Teks putih */
             padding: 4px 18px; 
             font-style: italic; 
             font-weight: bold; 
             font-size: 10pt; 
             border-radius: 0 15px 15px 0; 
         }
+        
+        /* 🌟 FOOTER KONTAK DI BAWAH 🌟 */
+        .footer-kontak {
+            position: fixed;
+            bottom: -2cm; /* Nempel ke dasar kertas */
+            left: -2cm;
+            right: -2cm;
+            height: 1.2cm;
+        }
+        .footer-kontak img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .isi-surat { 
             text-align: justify; 
             line-height: 1.5; 
@@ -55,13 +70,13 @@
         /* 🌟 JURUS FIX TTD KANAN MUTLAK BERSATU 🌟 */
         .ttd-wrapper {
             width: 100%;
-            text-align: right; /* Memaksa kotak TTD bergeser ke kanan kertas */
+            text-align: right; 
             margin-top: 30px;
         }
         .ttd-box {
-            width: 250px; /* Lebar area tanda tangan dikunci */
+            width: 250px; 
             display: inline-block;
-            text-align: left; /* Teks di dalam kotak tetap rapi rata kiri */
+            text-align: left; 
             vertical-align: top;
             line-height: 1.4;
         }
@@ -70,18 +85,21 @@
 <body>
 
     <div class="container">
+        
         <table width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr>
                 <td width="15%" align="left" valign="middle">
                     <img src="{{ public_path('asset/img/logo_ups.png') }}" width="85" alt="UPS">
                 </td>
-                <td width="70%" align="center" valign="middle" style="line-height: 1.2;">
-                    <div style="font-size: 13pt; font-weight: bold; color: #000;">YAYASAN PENDIDIKAN PANCASAKTI</div>
-                    <div style="font-size: 17pt; font-weight: bold; color: #d4a373; margin: 3px 0;">UNIVERSITAS PANCASAKTI TEGAL</div>
-                    <div style="font-size: 14pt; font-weight: bold; color: #000;">FAKULTAS TEKNIK DAN ILMU KOMPUTER</div>
-                    <div style="font-size: 9pt; color: #000; margin-top: 5px;">Kampus 1 : Jl. Halmahera KM 01 Kota Tegal | (0283) 351082 Fax. (0283) 351267</div>
-                    <div style="font-size: 9pt; color: #000;">Kampus 2 : Jl. Perintis Kemerdekaan Kota Tegal</div>
+                
+                <td width="70%" align="center" valign="middle" style="line-height: 1.1;">
+                    <div style="font-family: Arial, Helvetica, sans-serif; font-size: 11pt; font-weight: bold; color: #000; letter-spacing: 1px;">YAYASAN PENDIDIKAN PANCASAKTI</div>
+                    <div style="font-family: 'Times New Roman', Times, serif; font-size: 16pt; font-weight: bold; color: #a97b2d; margin: 3px 0; letter-spacing: 1px;">UNIVERSITAS PANCASAKTI TEGAL</div>
+                    <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; font-weight: bold; color: #000; letter-spacing: 0.5px;">FAKULTAS TEKNIK DAN ILMU KOMPUTER</div>
+                    <div style="font-size: 8pt; font-weight: bold; color: #000; margin-top: 5px;">Kampus 1 : Jl. Halmahera KM 01 Kota Tegal | (0283) 351082 Fax. (0283) 351267</div>
+                    <div style="font-size: 8pt; font-weight: bold; color: #000;">Kampus 2 : Jl. Perintis Kemerdekaan Kota Tegal</div>
                 </td>
+                
                 <td width="15%" align="right" valign="middle">
                     <img src="{{ public_path('asset/img/logo_unggul.png') }}" width="85" alt="Unggul">
                 </td>
@@ -91,7 +109,8 @@
         <div class="tagline-container">
             <span class="tagline">Inovatif | Adaptif | Global</span>
         </div>
-        <div class="garis-ganda"></div>
+        
+        <div class="garis-emas"></div>
 
         @php
             $urlValidasi = url("/verifikasi/dokumen/" . ($pengajuan->id ?? '0'));
@@ -100,7 +119,6 @@
                                 ->size(85)
                                 ->margin(0)
                                 ->generate($urlValidasi));
-                // QR Code diberikan tag <br> setelahnya agar nama kaprodi turun dengan aman
                 $img_qr = '<img src="data:image/svg+xml;base64,' . $qrcodeData . '" width="85" height="85" style="margin: 6px 0;"><br>';
             } catch (\Exception $e) {
                 $img_qr = '<div style="width:85px; height:85px; border:1px dashed #000; font-size:8pt; text-align:center; padding-top:30px; margin: 6px 0;">[QR TTD]</div><br>';
@@ -158,5 +176,10 @@
         </div>
 
     </div>
+
+    <div class="footer-kontak">
+        <img src="{{ public_path('asset/img/kop_bawah.png') }}" alt="Footer Kontak UPS">
+    </div>
+
 </body>
 </html>

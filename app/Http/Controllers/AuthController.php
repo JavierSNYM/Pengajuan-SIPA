@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+// 🌟 SEMUA USE WAJIB BERKUMPUL DI SINI (DI ATAS CLASS) 🌟
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon; 
 
 class AuthController extends Controller
 {
@@ -56,36 +58,44 @@ class AuthController extends Controller
         return view('auth.register'); 
     }
 
-   // 4. PROSES REGISTER MAHASISWA BARU
-public function register(Request $request)
-{
-    $request->validate([
-        'name'          => 'required|string|max:255',
-        // Gembok dipasang di sini: wajib unik di tabel users DAN wajib ada di tabel npm_whitelists
-        'npm'           => 'required|string|unique:users,npm|exists:npm_whitelists,npm',
-        'tempat_lahir'  => 'required|string|max:100', 
-        'tanggal_lahir' => 'required|date',           
-        'password'      => 'required|min:8|confirmed', 
-    ], [
-        'npm.unique'             => 'NPM ini sudah terdaftar di sistem.',
-        'npm.exists'             => 'Akses Ditolak: NPM tidak terdaftar dalam sistem!',
-        'tempat_lahir.required'  => 'Tempat lahir wajib diisi!',
-        'tanggal_lahir.required' => 'Tanggal lahir wajib diisi!',
-        'password.confirmed'     => 'Ulangi kata sandi tidak cocok!',
-    ]);
+    // 4. PROSES REGISTER MAHASISWA BARU (Batas Minimal Usia 17 Tahun)
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name'          => 'required|string|max:255',
+            // Gembok dipasang di sini: wajib unik di tabel users DAN wajib ada di tabel npm_whitelists
+            'npm'           => 'required|string|unique:users,npm|exists:npm_whitelists,npm',
+            'tempat_lahir'  => 'required|string|max:100', 
+            
+            // 🌟 VALIDASI MINIMAL USIA 17 TAHUN KEBELAKANG 🌟
+            'tanggal_lahir' => [
+                'required',
+                'date',
+                'before:' . Carbon::now()->subYears(17)->format('Y-m-d')
+            ],           
+            
+            'password'      => 'required|min:8|confirmed', 
+        ], [
+            'npm.unique'             => 'NPM ini sudah terdaftar di sistem.',
+            'npm.exists'             => 'Akses Ditolak: NPM tidak terdaftar dalam sistem!',
+            'tempat_lahir.required'  => 'Tempat lahir wajib diisi!',
+            'tanggal_lahir.required' => 'Tanggal lahir wajib diisi!',
+            'tanggal_lahir.before'   => 'Tanggal lahir tidak valid! Minimal usia mahasiswa adalah 17 tahun.',
+            'password.confirmed'     => 'Ulangi kata sandi tidak cocok!',
+        ]);
 
-    // Membuat user baru di database jika lolos validasi di atas
-    User::create([
-        'name'          => $request->name,
-        'npm'           => $request->npm,
-        'tempat_lahir'  => $request->tempat_lahir,  
-        'tanggal_lahir' => $request->tanggal_lahir, 
-        'password'      => \Illuminate\Support\Facades\Hash::make($request->password),
-        'role'          => 'mahasiswa',
-    ]);
+        // Membuat user baru di database jika lolos validasi di atas
+        User::create([
+            'name'          => $request->name,
+            'npm'           => $request->npm,
+            'tempat_lahir'  => $request->tempat_lahir,  
+            'tanggal_lahir' => $request->tanggal_lahir, 
+            'password'      => Hash::make($request->password),
+            'role'          => 'mahasiswa',
+        ]);
 
-    return redirect('/login')->with('success', 'Akun berhasil dibuat. Silakan masuk menggunakan NPM Anda.');
-}
+        return redirect('/login')->with('success', 'Akun berhasil dibuat. Silakan masuk menggunakan NPM Anda.');
+    }
 
     // 5. PROSES KELUAR SISTEM (LOGOUT)
     public function logout(Request $request)

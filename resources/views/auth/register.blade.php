@@ -55,12 +55,18 @@
                 <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 block w-full pl-11 p-3 outline-none font-medium transition-all" placeholder="Tempat Lahir (Contoh: Tegal)" required autocomplete="off">
             </div>
 
-            <div class="mb-4 relative group">
-                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400 group-focus-within:text-blue-600 transition-colors">
-                    <i class="fa-solid fa-calendar-days"></i>
-                </div>
-                <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 block w-full pl-11 p-3 outline-none font-medium transition-all" required>
-            </div>
+           <div class="mb-4 relative group">
+    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400 group-focus-within:text-blue-600 transition-colors">
+        <i class="fa-solid fa-calendar-days"></i>
+    </div>
+    <input type="date" 
+           name="tanggal_lahir" 
+           id="tanggal_lahir" 
+           value="{{ old('tanggal_lahir') }}"
+           max="{{ \Carbon\Carbon::now()->subYears(17)->format('Y-m-d') }}"
+           class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 block w-full pl-11 p-3 outline-none font-medium transition-all" 
+           required>
+</div>
 
             <div class="mb-4 relative group">
                 <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400 group-focus-within:text-blue-600 transition-colors">
