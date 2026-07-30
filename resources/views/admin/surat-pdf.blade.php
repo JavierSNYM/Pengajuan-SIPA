@@ -113,7 +113,8 @@
         <div class="garis-emas"></div>
 
         @php
-            $urlValidasi = url("/verifikasi/dokumen/" . ($pengajuan->id ?? '0'));
+            $domainAktif = request()->getSchemeAndHttpHost();
+            $urlValidasi = $domainAktif . "/verifikasi/dokumen/" . ($pengajuan->id ?? '0');
             try {
                 $qrcodeData = base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')
                                 ->size(85)
