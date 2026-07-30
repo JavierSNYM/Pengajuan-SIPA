@@ -49,3 +49,7 @@ Route::middleware('auth')->group(function () {
     // 👇 RUTE BARU UNTUK BACKUP WORD 👇
     Route::get('/admin/backup/{prodi}', [AdminController::class, 'downloadDanArsipkan'])->name('admin.backup');
 });
+Route::get('/bersihkan-cache', function() {
+    \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+    return "Cache berhasil dibersihkan, Brader!";
+});
