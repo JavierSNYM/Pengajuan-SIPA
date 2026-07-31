@@ -116,7 +116,6 @@
             $domainAktif = request()->getSchemeAndHttpHost();
             $urlValidasi = $domainAktif . "/verifikasi/dokumen/" . ($pengajuan->id ?? '0');
 
-            
             try {
                 $qrcodeData = base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')
                                 ->size(85)
@@ -147,21 +146,18 @@
                 $namaKaprodi = 'Ali Sofyan, S.T., M.Kom';
                 $nipyKaprodi = '3126511985';
             }
+
+            // FILTER SEDERHANA: Biar aman dan isi surat tidak hilang, kita hanya buang [TTD] saja dari DB
+            $isiSuratFinal = str_replace('[TTD]', '', $isi_surat);
         @endphp
 
         <div class="isi-surat">
-            {!! $isi_surat !!}
+            {!! $isiSuratFinal !!}
         </div>
 
         <div class="ttd-wrapper">
             <div class="ttd-box">
-                @if($pengajuan->jenis_surat == 'Peminjaman Ruangan')
-                    Tegal, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}<br>
-                    Dekan Fakultas Teknik dan Ilmu Komputer,<br>
-                    {!! $img_qr !!}
-                    <strong>Dr. Agus Wibowo, S.T., M.T.</strong><br>
-                    NIPY. 126518101972
-                @elseif($pengajuan->jenis_surat == 'PKL' || $pengajuan->jenis_surat == 'KKL')
+                @if(str_contains(strtolower($pengajuan->jenis_surat), 'pkl') || str_contains(strtolower($pengajuan->jenis_surat), 'kkl') || str_contains(strtolower($pengajuan->jenis_surat), 'peminjaman') || str_contains(strtolower($pengajuan->jenis_surat), 'ruangan'))
                     Tegal, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('F Y') }}<br>
                     Kaprodi {{ $namaProdi }},<br>
                     {!! $img_qr !!}

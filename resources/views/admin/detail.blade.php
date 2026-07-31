@@ -173,9 +173,6 @@
                                         </table>
                                     </figure>
                                     <p>Demikian Surat keterangan ini dibuat untuk digunakan sebagaimana mestinya.</p>
-                                    
-                                    <p>&nbsp;</p>
-                                    <p style="text-align: right;">An. Dekan,<br>Ka. Prodi {{ $namaProdi }}<br>[TTD]<br><strong>{{ $namaKaprodi }}</strong><br>NIPY. {{ $nipyKaprodi }}</p>
 
                                 @elseif($pengajuan->jenis_surat == 'PKL' or $pengajuan->jenis_surat == 'KKL')
                                     <p><strong>FORM-1<br>LEMBAR REKOMENDASI</strong></p>
@@ -216,15 +213,12 @@
                                         </table>
                                     </figure>
                                     <p>Demikian rekomendasi ini untuk dapat dipergunakan sebagaimana mestinya.</p>
-                                    
-                                    <p>&nbsp;</p>
-                                    <p style="text-align: right;">Tegal, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('F Y') }}<br>Kaprodi {{ $namaProdi }}<br>[TTD]<br><strong>{{ $namaKaprodi }}</strong><br>NIPY. {{ $nipyKaprodi }}</p>
 
                                 @elseif($pengajuan->jenis_surat == 'Peminjaman Ruangan')
                                     <p style="text-align: center;"><strong><u>SURAT PERSETUJUAN PEMINJAMAN RUANGAN</u></strong></p>
                                     <p style="text-align: center;">Nomor : .../K/I/FTIK/UPS/{{ date('m/Y') }}</p>
                                     
-                                    <p>Menindaklanjuti permohonan peminjaman ruangan/fasilitas, Dekan Fakultas Teknik dan Ilmu Komputer Universitas Pancasakti Tegal dengan ini memberikan persetujuan kepada:</p>
+                                    <p>Menindaklanjuti permohonan peminjaman ruangan/fasilitas, Ketua Program Studi {{ $namaProdi }} Fakultas Teknik dan Ilmu Komputer Universitas Pancasakti Tegal dengan ini memberikan persetujuan kepada:</p>
                                     <figure class="table">
                                         <table style="width: 100%;">
                                             <tbody>
@@ -239,12 +233,9 @@
                                     </figure>
                                     <p>Untuk menggunakan fasilitas / ruangan tersebut sesuai dengan proposal permohonan yang diajukan. Diharapkan untuk menjaga kebersihan dan ketertiban fasilitas kampus selama kegiatan berlangsung.</p>
                                     <p>Demikian surat persetujuan ini dibuat untuk dipergunakan sebagaimana mestinya.</p>
-                                    
-                                    <p>&nbsp;</p>
-                                    <p style="text-align: right;">Tegal, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}<br>Dekan Fakultas Teknik dan Ilmu Komputer<br>[TTD]<br><strong>Dr. Agus Wibowo, S.T., M.T.</strong><br>NIPY. 126518101972</p>
 
                                 @else
-                                    <p>Teks balasan default untuk jenis surat ini belum diatur. Silakan ketik secara manual. Gunakan <strong>[TTD]</strong> untuk menempelkan QR Code.</p>
+                                    <p>Teks balasan default untuk jenis surat ini belum diatur. Silakan ketik secara manual.</p>
                                 @endif
                             @endif
                         </textarea>
