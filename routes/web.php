@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
     // ===================================================================
     Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('pengajuan.index');
     
-    // 🌟 INI BARIS BARU YANG SAYA TAMBAHKAN AGAR TIDAK ERROR LAGI
+    // Baris baru agar tidak error saat membuka form pengajuan
     Route::get('/pengajuan/create', [PengajuanController::class, 'create'])->name('pengajuan.create');
     
     Route::post('/pengajuan', [PengajuanController::class, 'ajukanSurat'])->name('pengajuan.store');
@@ -47,8 +47,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/reset-sandi/{id}', [AdminController::class, 'resetPassword'])->name('admin.resetSandi');
     Route::post('/admin/reset-sandi-npm', [AdminController::class, 'resetPasswordByNpm'])->name('admin.resetSandiNpm');
     
-    // 👇 RUTE BARU UNTUK BACKUP WORD 👇
+    // RUTE BARU UNTUK BACKUP WORD
     Route::get('/admin/backup/{prodi}', [AdminController::class, 'downloadDanArsipkan'])->name('admin.backup');
+
+    // ===================================================================
+    // RUTE BARU: KELOLA DATA MAHASISWA (WHITELIST & EXCEL)
+    // ===================================================================
+    Route::get('/admin/mahasiswa', [AdminController::class, 'kelolaMahasiswa'])->name('admin.mahasiswa');
+    Route::post('/admin/mahasiswa/import', [AdminController::class, 'importMahasiswa'])->name('admin.mahasiswa.import');
+    Route::post('/admin/mahasiswa/tambah', [AdminController::class, 'storeMahasiswa'])->name('admin.mahasiswa.store');
+    Route::delete('/admin/mahasiswa/{id}', [AdminController::class, 'destroyMahasiswa'])->name('admin.mahasiswa.destroy');
 });
 
 // ROUTE PEMBERSIH CACHE
@@ -60,11 +68,11 @@ Route::get('/bersihkan-cache', function() {
 // ===================================================================
 // ROUTE HALAMAN VERIFIKASI QR CODE (PUBLIK)
 // ===================================================================
-Route::get('/verifikasi/dokumen/{id}', function ($id) {
-    // Ambil data pengajuan beserta relasi user
-    $pengajuan = Pengajuan::with('user')->find($id);
+Route::get('/verifikasi/dokumen/{kode}', function ($kode) {
+    // 🌟 MENCARI BERDASARKAN KODE UNIK BUKAN ID LAGI
+    $pengajuan = Pengajuan::with('user')->where('kode_verifikasi', $kode)->first();
 
-    // Jika ID Surat tidak ada di database / QR Code Palsu
+    // Jika Kode Surat tidak ada di database / QR Code Palsu
     if (!$pengajuan) {
         return "
         <!DOCTYPE html>
@@ -90,14 +98,15 @@ Route::get('/verifikasi/dokumen/{id}', function ($id) {
         </html>";
     }
 
-    // Deteksi Prodi Otomatis dari NPM
+    // Deteksi Prodi Otomatis dari NPM FTIK UPS Tegal (Eksplisit 66 untuk Informatika)
     $npm = $pengajuan->user->npm ?? '';
     $kodeProdi = substr($npm, 0, 2);
     $namaProdi = match($kodeProdi) {
+        '66' => 'Teknik Informatika',
         '65' => 'Teknik Sipil',
         '64' => 'Teknik Mesin',
         '63' => 'Teknik Industri',
-        default => 'Teknik Informatika'
+        default => 'Program Studi FTIK'
     };
 
     // Tampilan Halaman Verifikasi Resmi
@@ -120,6 +129,10 @@ Route::get('/verifikasi/dokumen/{id}', function ($id) {
                 </div>
                 <h1 class='font-black text-lg tracking-wide uppercase'>Dokumen Terverifikasi</h1>
                 <p class='text-[11px] text-emerald-100 font-medium tracking-wider uppercase mt-0.5'>SIPA FTIK Universitas Pancasakti Tegal</p>
+                
+                <div class='mt-3 inline-block bg-emerald-700/50 backdrop-blur-sm text-yellow-300 text-[11px] font-mono font-bold px-3 py-1 rounded-md border border-emerald-400/30 tracking-widest'>
+                    SECURE ID: " . $pengajuan->kode_verifikasi . "
+                </div>
             </div>
 
             <div class='p-6 space-y-4 text-slate-700'>

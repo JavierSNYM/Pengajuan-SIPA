@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Pengajuan; 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail; 
+use Illuminate\Support\Str; // 🌟 TAMBAHAN REVISI 3: Library Pembuat Teks Acak
 
 class PengajuanController extends Controller
 {
@@ -135,6 +136,10 @@ class PengajuanController extends Controller
         // SIMPAN KE DATABASE
         $pengajuan = new Pengajuan();
         $pengajuan->user_id = Auth::user()->id;
+        
+        // 🌟 REVISI 3: GENERATE KODE UNIK (Contoh Hasil: SIPA-8A4F9X) 🌟
+        $pengajuan->kode_verifikasi = 'SIPA-' . strtoupper(Str::random(6));
+        
         $pengajuan->jenis_surat = $jenisSurat;
         $pengajuan->email_aktif = $emailAktif;
         $pengajuan->status = 'Menunggu Validasi Admin'; 
@@ -189,6 +194,7 @@ class PengajuanController extends Controller
                         <tr><td><b>Nama Mahasiswa</b></td><td>: {$pengajuan->user->name}</td></tr>
                         <tr><td><b>NPM / NIM</b></td><td>: {$pengajuan->user->npm}</td></tr>
                         <tr><td><b>Jenis Layanan</b></td><td>: {$pengajuan->jenis_surat}</td></tr>
+                        <tr><td><b>Kode Keamanan</b></td><td>: {$pengajuan->kode_verifikasi}</td></tr>
                         <tr><td><b>Waktu Masuk</b></td><td>: " . date('d-m-Y H:i') . " WIB</td></tr>
                     </table>
                     <p style='margin-top: 20px;'>Silakan login ke Dashboard Admin SIPA untuk memverifikasi berkas fisik tersebut.</p>

@@ -114,7 +114,7 @@
 
         @php
             $domainAktif = request()->getSchemeAndHttpHost();
-            $urlValidasi = $domainAktif . "/verifikasi/dokumen/" . ($pengajuan->id ?? '0');
+           $urlValidasi = $domainAktif . "/verifikasi/dokumen/" . ($pengajuan->kode_verifikasi ?? '0');
 
             try {
                 $qrcodeData = base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')

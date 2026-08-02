@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pengajuan;
+use App\Models\NpmWhitelist;
+use App\Imports\MahasiswaImport;
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon; 
 
 class AdminController extends Controller
@@ -296,5 +299,57 @@ class AdminController extends Controller
         $mahasiswa->save();
 
         return redirect()->back()->with('success', 'BERHASIL! Kata sandi akun atas nama ' . $mahasiswa->name . ' (' . $mahasiswa->npm . ') telah direset menjadi: ftik12345');
+    }
+
+    // ==========================================
+    // REVISI DOSEN: PENGELOLAAN DATA MAHASISWA
+    // ==========================================
+
+    public function kelolaMahasiswa()
+    {
+        // Menampilkan data dengan urutan NPM terbaru di atas
+        $mahasiswas = NpmWhitelist::orderBy('id', 'desc')->get();
+        return view('admin.mahasiswa', compact('mahasiswas'));
+    }
+
+    public function storeMahasiswa(Request $request)
+    {
+        $request->validate([
+            'npm' => 'required|unique:npm_whitelists,npm',
+            'nama_mahasiswa' => 'required|string|max:255',
+        ], [
+            'npm.unique' => 'NPM ini sudah ada di dalam sistem!',
+        ]);
+
+        NpmWhitelist::create([
+            'npm' => $request->npm,
+            'nama_mahasiswa' => $request->nama_mahasiswa,
+        ]);
+
+        return back()->with('success', 'Data Mahasiswa berhasil ditambahkan secara manual.');
+    }
+
+    public function destroyMahasiswa($id)
+    {
+        $mahasiswa = NpmWhitelist::findOrFail($id);
+        $mahasiswa->delete();
+
+        return back()->with('success', 'Data Mahasiswa berhasil dihapus dari sistem.');
+    }
+
+    public function importMahasiswa(Request $request)
+    {
+        $request->validate([
+            'file_excel' => 'required|mimes:xlsx,xls,csv'
+        ], [
+            'file_excel.mimes' => 'Format file wajib berakhiran .xlsx atau .csv'
+        ]);
+
+        try {
+            Excel::import(new MahasiswaImport, $request->file('file_excel'));
+            return back()->with('success', 'Data Mahasiswa dari Excel berhasil di-import massal!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal Import: Pastikan format excel memiliki kolom [npm] dan [nama_mahasiswa].');
+        }
     }
 }

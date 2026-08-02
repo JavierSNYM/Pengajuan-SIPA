@@ -100,29 +100,39 @@
 
         @php $prodiAktif = $prodiAktif ?? '66'; @endphp
         
-        <div class="flex overflow-x-auto border-b border-gray-200 mb-6 bg-white p-2 rounded-2xl shadow-sm gap-2">
-            <a href="?prodi=66" class="flex-1 min-w-[120px] flex flex-col items-center justify-center py-3 px-2 rounded-xl transition-all {{ $prodiAktif == '66' ? 'bg-[#1e4b8f] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50' }}">
-                <i class="fa-solid fa-laptop-code mb-1 text-base sm:text-lg"></i>
-                <span class="font-bold text-[10px] sm:text-[11px] tracking-wider uppercase mb-1.5">Informatika</span>
-                <span class="{{ $prodiAktif == '66' ? 'bg-yellow-400 text-blue-900' : 'bg-red-50 text-red-600 border border-red-100' }} text-[9px] font-black px-2.5 py-0.5 rounded-full">{{ $countInfo ?? 0 }} Msk</span>
-            </a>
-            
-            <a href="?prodi=65" class="flex-1 min-w-[120px] flex flex-col items-center justify-center py-3 px-2 rounded-xl transition-all {{ $prodiAktif == '65' ? 'bg-[#1e4b8f] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50' }}">
-                <i class="fa-solid fa-building mb-1 text-base sm:text-lg"></i>
-                <span class="font-bold text-[10px] sm:text-[11px] tracking-wider uppercase mb-1.5">Sipil</span>
-                <span class="{{ $prodiAktif == '65' ? 'bg-yellow-400 text-blue-900' : 'bg-red-50 text-red-600 border border-red-100' }} text-[9px] font-black px-2.5 py-0.5 rounded-full">{{ $countSipil ?? 0 }} Msk</span>
-            </a>
-            
-            <a href="?prodi=64" class="flex-1 min-w-[120px] flex flex-col items-center justify-center py-3 px-2 rounded-xl transition-all {{ $prodiAktif == '64' ? 'bg-[#1e4b8f] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50' }}">
-                <i class="fa-solid fa-gear mb-1 text-base sm:text-lg"></i>
-                <span class="font-bold text-[10px] sm:text-[11px] tracking-wider uppercase mb-1.5">Mesin</span>
-                <span class="{{ $prodiAktif == '64' ? 'bg-yellow-400 text-blue-900' : 'bg-red-50 text-red-600 border border-red-100' }} text-[9px] font-black px-2.5 py-0.5 rounded-full">{{ $countMesin ?? 0 }} Msk</span>
-            </a>
-            
-            <a href="?prodi=63" class="flex-1 min-w-[120px] flex flex-col items-center justify-center py-3 px-2 rounded-xl transition-all {{ $prodiAktif == '63' ? 'bg-[#1e4b8f] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50' }}">
-                <i class="fa-solid fa-industry mb-1 text-base sm:text-lg"></i>
-                <span class="font-bold text-[10px] sm:text-[11px] tracking-wider uppercase mb-1.5">Industri</span>
-                <span class="{{ $prodiAktif == '63' ? 'bg-yellow-400 text-blue-900' : 'bg-red-50 text-red-600 border border-red-100' }} text-[9px] font-black px-2.5 py-0.5 rounded-full">{{ $countIndustri ?? 0 }} Msk</span>
+        <div class="flex flex-col md:flex-row gap-4 items-center mb-6">
+            <div class="flex-grow flex overflow-x-auto border-b border-gray-200 bg-white p-2 rounded-2xl shadow-sm gap-2 w-full md:w-auto">
+                <a href="?prodi=66" class="flex-1 min-w-[100px] flex flex-col items-center justify-center py-3 px-2 rounded-xl transition-all {{ $prodiAktif == '66' ? 'bg-[#1e4b8f] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50' }}">
+                    <i class="fa-solid fa-laptop-code mb-1 text-base"></i>
+                    <span class="font-bold text-[10px] tracking-wider uppercase mb-1.5">Informatika</span>
+                    <span class="{{ $prodiAktif == '66' ? 'bg-yellow-400 text-blue-900' : 'bg-red-50 text-red-600 border border-red-100' }} text-[9px] font-black px-2 py-0.5 rounded-full">{{ $countInfo ?? 0 }} Msk</span>
+                </a>
+                
+                <a href="?prodi=65" class="flex-1 min-w-[100px] flex flex-col items-center justify-center py-3 px-2 rounded-xl transition-all {{ $prodiAktif == '65' ? 'bg-[#1e4b8f] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50' }}">
+                    <i class="fa-solid fa-building mb-1 text-base"></i>
+                    <span class="font-bold text-[10px] tracking-wider uppercase mb-1.5">Sipil</span>
+                    <span class="{{ $prodiAktif == '65' ? 'bg-yellow-400 text-blue-900' : 'bg-red-50 text-red-600 border border-red-100' }} text-[9px] font-black px-2 py-0.5 rounded-full">{{ $countSipil ?? 0 }} Msk</span>
+                </a>
+                
+                <a href="?prodi=64" class="flex-1 min-w-[100px] flex flex-col items-center justify-center py-3 px-2 rounded-xl transition-all {{ $prodiAktif == '64' ? 'bg-[#1e4b8f] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50' }}">
+                    <i class="fa-solid fa-gear mb-1 text-base"></i>
+                    <span class="font-bold text-[10px] tracking-wider uppercase mb-1.5">Mesin</span>
+                    <span class="{{ $prodiAktif == '64' ? 'bg-yellow-400 text-blue-900' : 'bg-red-50 text-red-600 border border-red-100' }} text-[9px] font-black px-2 py-0.5 rounded-full">{{ $countMesin ?? 0 }} Msk</span>
+                </a>
+                
+                <a href="?prodi=63" class="flex-1 min-w-[100px] flex flex-col items-center justify-center py-3 px-2 rounded-xl transition-all {{ $prodiAktif == '63' ? 'bg-[#1e4b8f] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50' }}">
+                    <i class="fa-solid fa-industry mb-1 text-base"></i>
+                    <span class="font-bold text-[10px] tracking-wider uppercase mb-1.5">Industri</span>
+                    <span class="{{ $prodiAktif == '63' ? 'bg-yellow-400 text-blue-900' : 'bg-red-50 text-red-600 border border-red-100' }} text-[9px] font-black px-2 py-0.5 rounded-full">{{ $countIndustri ?? 0 }} Msk</span>
+                </a>
+            </div>
+
+            <a href="{{ route('admin.mahasiswa') }}" class="w-full md:w-auto bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold px-6 py-4 rounded-2xl shadow-lg shadow-indigo-600/20 text-xs tracking-wide flex items-center justify-center gap-2 transition-all active:scale-95 h-full min-h-[66px]">
+                <i class="fa-solid fa-users-gear text-lg"></i>
+                <div class="text-left">
+                    <p class="leading-none uppercase">Kelola Data Mahasiswa</p>
+                    <p class="text-[9px] text-indigo-200 font-medium mt-1 uppercase tracking-wider">Whitelist Akun & Import Excel</p>
+                </div>
             </a>
         </div>
 
@@ -140,7 +150,7 @@
                    target="_blank" 
                    onclick="if(confirm('Download data backup prodi ini? Setelah didownload, daftar antrean di layar saat ini akan otomatis ter-reset/diarsipkan!')) { setTimeout(() => window.location.reload(), 2500); return true; } else { return false; }" 
                    class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 whitespace-nowrap">
-                   <i class="fa-solid fa-file-word text-sm"></i> <span>DOWNLOAD DATA</span>
+                    <i class="fa-solid fa-file-word text-sm"></i> <span>DOWNLOAD DATA</span>
                 </a>
             </div>
 
