@@ -57,6 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/mahasiswa/import', [AdminController::class, 'importMahasiswa'])->name('admin.mahasiswa.import');
     Route::post('/admin/mahasiswa/tambah', [AdminController::class, 'storeMahasiswa'])->name('admin.mahasiswa.store');
     Route::delete('/admin/mahasiswa/{id}', [AdminController::class, 'destroyMahasiswa'])->name('admin.mahasiswa.destroy');
+    Route::post('/admin/mahasiswa/hapus-massal', [AdminController::class, 'hapusMassalMahasiswa'])->name('admin.mahasiswa.hapusMassal');
 });
 
 // ROUTE PEMBERSIH CACHE

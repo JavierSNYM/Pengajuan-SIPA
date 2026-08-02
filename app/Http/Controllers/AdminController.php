@@ -223,8 +223,9 @@ class AdminController extends Controller
                 });
 
             } catch (\Exception $e) {
-                return redirect()->back()->with('error', 'Gagal mengirim email ACC: ' . $e->getMessage());
-            }
+            // 🌟 MENAMPILKAN ERROR ASLI DARI SISTEM LARAVEL
+            return back()->with('error', 'SYSTEM ERROR: ' . $e->getMessage());
+        }
         } 
         // ==========================================
         // JIKA ADMIN MENEKAN TOMBOL "DITOLAK"
@@ -351,5 +352,20 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal Import: Pastikan format excel memiliki kolom [npm] dan [nama_mahasiswa].');
         }
+    }
+
+    // 🌟 FUNGSI BARU: HAPUS MASSAL MAHASISWA 🌟
+    public function hapusMassalMahasiswa(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return back()->with('error', 'Gagal! Anda belum mencentang satu pun data mahasiswa yang akan dihapus.');
+        }
+
+        // Hapus semua data yang ID-nya ada di dalam array $ids
+        NpmWhitelist::whereIn('id', $ids)->delete();
+
+        return back()->with('success', count($ids) . ' data mahasiswa berhasil dihapus secara massal dari sistem.');
     }
 }

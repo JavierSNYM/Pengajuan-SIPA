@@ -76,10 +76,12 @@
                 <form action="{{ route('admin.mahasiswa.import') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                     @csrf
                     <div class="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:bg-slate-50 transition-colors relative cursor-pointer group">
-                        <input type="file" name="file_excel" accept=".xlsx, .xls, .csv" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" required>
-                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 group-hover:text-emerald-500 transition-colors mb-2"></i>
-                        <p class="text-xs font-bold text-slate-600">Klik atau Drag & Drop File Excel di sini</p>
-                    </div>
+    <input type="file" id="upload_excel" name="file_excel" accept=".xlsx, .xls, .csv" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" required 
+    onchange="document.getElementById('teks_nama_file').innerText = this.files[0].name; document.getElementById('ikon_upload').className = 'fa-solid fa-file-circle-check text-3xl text-emerald-500 mb-2';">
+    
+    <i id="ikon_upload" class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 group-hover:text-emerald-500 transition-colors mb-2"></i>
+    <p id="teks_nama_file" class="text-xs font-bold text-slate-600">Klik atau Drag & Drop File Excel di sini</p>
+</div>
                     <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-5 py-3 rounded-xl text-xs font-bold transition-all shadow-md shadow-emerald-600/20">
                         IMPORT FILE SEKARANG
                     </button>
@@ -88,44 +90,69 @@
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center flex-wrap gap-4">
                 <h2 class="font-bold text-slate-700 text-sm tracking-wide flex items-center gap-2">
                     <i class="fa-solid fa-users text-blue-600"></i> Data Master Whitelist Mahasiswa
                 </h2>
+                
+                <button type="submit" form="form-hapus-massal" onclick="return confirm('PERINGATAN: Yakin ingin menghapus semua data mahasiswa yang dicentang?')" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-xl text-[11px] font-bold transition-all flex items-center gap-2 shadow-sm active:scale-95">
+                    <i class="fa-solid fa-trash-can-arrow-up"></i> HAPUS TERPILIH
+                </button>
             </div>
             
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50 text-[10px] uppercase tracking-wider text-slate-500 border-b border-slate-200">
-                            <th class="p-4 pl-6 font-bold w-16">No</th>
-                            <th class="p-4 font-bold">NPM</th>
-                            <th class="p-4 font-bold">Nama Mahasiswa</th>
-                            <th class="p-4 pr-6 font-bold text-right w-24">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-xs text-slate-700">
-                        @foreach($mahasiswas as $index => $mhs)
-                        <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
-                            <td class="p-4 pl-6 font-medium text-slate-400">{{ $loop->iteration }}</td>
-                            <td class="p-4 font-bold text-blue-600">{{ $mhs->npm }}</td>
-                            <td class="p-4 font-semibold">{{ $mhs->nama_mahasiswa }}</td>
-                            <td class="p-4 pr-6 text-right">
-                                <form action="{{ route('admin.mahasiswa.destroy', $mhs->id) }}" method="POST" onsubmit="return confirm('Hapus data mahasiswa ini? Mahasiswa bersangkutan tidak akan bisa mendaftar akun.');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="w-8 h-8 bg-red-50 hover:bg-red-500 text-red-500 hover:text-white rounded-lg flex items-center justify-center transition-all">
+                <form id="form-hapus-massal" action="{{ route('admin.mahasiswa.hapusMassal') }}" method="POST">
+                    @csrf
+                    <table class="w-full text-left border-collapse min-w-[600px]">
+                        <thead>
+                            <tr class="bg-slate-50 text-[10px] uppercase tracking-wider text-slate-500 border-b border-slate-200">
+                                <th class="p-4 pl-6 font-bold w-12 text-center">
+                                    <input type="checkbox" id="check-all" onclick="toggleCheckboxes(this)" class="w-4 h-4 cursor-pointer accent-blue-600 rounded">
+                                </th>
+                                <th class="p-4 font-bold w-16">No</th>
+                                <th class="p-4 font-bold">NPM</th>
+                                <th class="p-4 font-bold">Nama Mahasiswa</th>
+                                <th class="p-4 pr-6 font-bold text-right w-24">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xs text-slate-700">
+                            @foreach($mahasiswas as $index => $mhs)
+                            <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+                                <td class="p-4 pl-6 text-center">
+                                    <input type="checkbox" name="ids[]" value="{{ $mhs->id }}" class="check-item w-4 h-4 cursor-pointer accent-blue-600 rounded">
+                                </td>
+                                <td class="p-4 font-medium text-slate-400">{{ $loop->iteration }}</td>
+                                <td class="p-4 font-bold text-blue-600">{{ $mhs->npm }}</td>
+                                <td class="p-4 font-semibold">{{ $mhs->nama_mahasiswa }}</td>
+                                <td class="p-4 pr-6 text-right">
+                                    <button type="button" onclick="if(confirm('Hapus mahasiswa ini?')) { document.getElementById('delete-form-{{ $mhs->id }}').submit(); }" class="w-8 h-8 bg-rose-50 hover:bg-rose-500 text-rose-500 hover:text-white rounded-lg inline-flex items-center justify-center transition-all">
                                         <i class="fa-solid fa-trash-can text-sm"></i>
                                     </button>
-                                </form>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </form>
+
+                @foreach($mahasiswas as $mhs)
+                <form id="delete-form-{{ $mhs->id }}" action="{{ route('admin.mahasiswa.destroy', $mhs->id) }}" method="POST" class="hidden">
+                    @csrf
+                    @method('DELETE')
+                </form>
+                @endforeach
+
             </div>
         </div>
-
     </main>
+
+    <script>
+        function toggleCheckboxes(source) {
+            let checkboxes = document.querySelectorAll('.check-item');
+            for(let i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+    </script>
 </body>
 </html>
