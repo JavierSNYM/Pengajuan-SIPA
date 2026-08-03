@@ -306,11 +306,30 @@ class AdminController extends Controller
     // REVISI DOSEN: PENGELOLAAN DATA MAHASISWA
     // ==========================================
 
-    public function kelolaMahasiswa()
+   public function kelolaMahasiswa(Request $request)
     {
-        // Menampilkan data dengan urutan NPM terbaru di atas
-        $mahasiswas = NpmWhitelist::orderBy('id', 'desc')->get();
-        return view('admin.mahasiswa', compact('mahasiswas'));
+        // 1. Ambil prodi yang sedang aktif dipilih (Default: Informatika - 66)
+        $prodiAktif = $request->get('prodi', '66');
+
+        // 2. Filter data menggunakan CAST agar tipe data integer di MySQL aman dibaca string LIKE
+        $mahasiswas = NpmWhitelist::whereRaw("CAST(npm AS CHAR) LIKE ?", [$prodiAktif . '%'])
+                        ->orderBy('id', 'desc')
+                        ->get();
+
+        // 3. Hitung jumlah mahasiswa aktif per prodi dengan proteksi CAST yang sama
+        $countInfo = NpmWhitelist::whereRaw("CAST(npm AS CHAR) LIKE '66%'")->count();
+        $countSipil = NpmWhitelist::whereRaw("CAST(npm AS CHAR) LIKE '65%'")->count();
+        $countMesin = NpmWhitelist::whereRaw("CAST(npm AS CHAR) LIKE '64%'")->count();
+        $countIndustri = NpmWhitelist::whereRaw("CAST(npm AS CHAR) LIKE '63%'")->count();
+
+        return view('admin.mahasiswa', compact(
+            'mahasiswas', 
+            'prodiAktif', 
+            'countInfo', 
+            'countSipil', 
+            'countMesin', 
+            'countIndustri'
+        ));
     }
 
     public function storeMahasiswa(Request $request)
